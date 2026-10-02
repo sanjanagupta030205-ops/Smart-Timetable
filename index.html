@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart Timetable | Student Class Schedule Planner</title>
+
+<meta name="description"
+content="Smart Timetable helps students organize classes, study sessions, breaks and weekly schedules in one simple timetable.">
+
+<meta name="keywords"
+content="student timetable, college timetable, class schedule, study timetable, weekly timetable, timetable planner, SEO assignment, keyword research">
+
+<style>
+:root{
+    color-scheme:light dark;
+    --bg:light-dark(#f4f7fb,#101827);
+    --surface:light-dark(#fff,#182235);
+    --surface2:light-dark(#eef3f9,#202d43);
+    --text:light-dark(#172033,#f5f7fb);
+    --muted:light-dark(#607089,#aebbd0);
+    --primary:light-dark(#315efb,#7d99ff);
+    --border:light-dark(#d9e1ec,#334158);
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+#app{
+    min-height:100vh;
+    background:var(--bg);
+}
+
+header{
+    padding:22px 5vw;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:18px;
+    position:sticky;
+    top:0;
+    background:var(--bg);
+    z-index:5;
+}
+
+.brand{
+    font-size:1.35rem;
+    font-weight:800;
+}
+
+.brand span{
+    color:var(--primary);
+}
+
+nav{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+nav button,
+.btn{
+    border:1px solid var(--border);
+    background:var(--surface);
+    color:var(--text);
+    padding:10px 15px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+nav button.active,
+.btn.primary{
+    background:var(--primary);
+    color:white;
+    border-color:var(--primary);
+}
+
+main{
+    max-width:1200px;
+    margin:auto;
+    padding:42px 5vw 70px;
+}
+
+.hero{
+    display:grid;
+    grid-template-columns:1.4fr .8fr;
+    gap:28px;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.hero h1{
+    font-size:clamp(2.2rem,5vw,4.2rem);
+    line-height:1.03;
+    margin:0 0 16px;
+}
+
+.hero p{
+    font-size:1.05rem;
+    color:var(--muted);
+    max-width:650px;
+    line-height:1.7;
+}
+
+.hero-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 10px 35px rgba(30,50,90,.08);
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.stat{
+    background:var(--surface2);
+    border-radius:14px;
+    padding:18px;
+}
+
+.stat b{
+    display:block;
+    font-size:1.6rem;
+}
+
+.stat small{
+    color:var(--muted);
+}
+
+.panel{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:22px;
+    margin-top:24px;
+}
+
+.panel h2{
+    margin-top:0;
+}
+
+.controls{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+select,
+input{
+    padding:11px 12px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--surface);
+    color:var(--text);
+}
+
+.table-wrap{
+    overflow:auto;
+}
+
+.timetable{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    min-width:760px;
+}
+
+.timetable th,
+.timetable td{
+    padding:13px;
+    border-right:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    text-align:center;
+    vertical-align:top;
+}
+
+.timetable th{
+    background:var(--surface2);
+    font-size:.9rem;
+}
+
+.time{
+    font-weight:700;
+    white-space:nowrap;
+    color:var(--muted);
+}
+
+.slot{
+    min-height:74px;
+}
+
+.class-card{
+    padding:10px;
+    border-radius:10px;
+    background:light-dark(#e9efff,#293b68);
+    text-align:left;
+}
+
+.class-card strong{
+    display:block;
+}
+
+.class-card small{
+    color:var(--muted);
+}
+
+.feature-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.feature{
+    padding:20px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    background:var(--surface);
+}
+
+.feature h3{
+    margin-top:0;
+}
+
+.feature p{
+    color:var(--muted);
+    line-height:1.55;
+}
+
+footer{
+    text-align:center;
+    color:var(--muted);
+    padding:25px;
+    border-top:1px solid var(--border);
+}
+
+@media(max-width:850px){
+    .hero{
+        grid-template-columns:1fr;
+    }
+
+    .feature-grid{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:520px){
+    header{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<header>
+
+<div class="brand">
+Smart<span>Timetable</span>
+</div>
+
+<nav>
+<button class="active" data-view="home">Home</button>
+<button data-view="timetable">College Timetable</button>
+<button data-view="study">Revision Plan</button>
+<button data-view="exam">Exam Plan</button>
+<button data-view="seo">SEO Assignment</button>
+<button data-view="about">About</button>
+</nav>
+
+</header>
+
+<main id="main"></main>
+
+<footer>
+Smart Timetable • A simple weekly planner for students
+</footer>
+
+</div>
+
+<script>
+
+const defaultData = [
+
+{day:'Monday',time:'09:00-10:00',subject:'AI-Stat',room:'RK'},
+
+{day:'Monday',time:'10:30-11:30',subject:'Advanced Python Lab (SE1/SE2)',room:'SP • A1-04/A1-05'},
+
+{day:'Monday',time:'11:30-12:30',subject:'Advanced Python Lab (SE1/SE2)',room:'SP • A1-04/A1-05'},
+
+{day:'Monday',time:'13:15-14:15',subject:'Computer Graphics',room:'AS'},
+
+{day:'Monday',time:'14:15-15:15',subject:'Data Structures & Algorithms',room:'FS'},
+
+
+{day:'Tuesday',time:'09:00-10:00',subject:'AI-Stat',room:'RK'},
+
+{day:'Tuesday',time:'10:30-11:30',subject:'Computer Graphics',room:'AS'},
+
+{day:'Tuesday',time:'11:30-12:30',subject:'Data Structures & Algorithms',room:'FS'},
+
+{day:'Tuesday',time:'13:15-15:15',subject:'Project Based Learning (SE1/SE2)',room:'SB • A1-01/A1-02'},
+
+
+{day:'Wednesday',time:'09:00-10:00',subject:'Digital Marketing',room:'SN'},
+
+{day:'Wednesday',time:'10:30-11:30',subject:'Advanced Python Lab (SE1/SE2)',room:'SP • A1-04/A1-05'},
+
+{day:'Wednesday',time:'11:30-12:30',subject:'Advanced Python Lab (SE1/SE2)',room:'SP • A1-04/A1-05'},
+
+{day:'Wednesday',time:'13:15-14:15',subject:'DSA Lab (SE1/SE2)',room:'SN • A1-10'},
+
+{day:'Wednesday',time:'14:15-15:15',subject:'OOPS Lab (SE1/SE2)',room:'NG • A1-11'},
+
+
+{day:'Thursday',time:'09:00-10:00',subject:'AI-Stat',room:'RK'},
+
+{day:'Thursday',time:'10:30-11:30',subject:'OOPS with C++',room:'CP'},
+
+{day:'Thursday',time:'11:30-12:30',subject:'Computer Graphics',room:'AS'},
+
+{day:'Thursday',time:'13:15-14:15',subject:'Data Structures & Algorithms',room:'FS'},
+
+{day:'Thursday',time:'14:15-15:15',subject:'GFM Meeting',room:'Class Activity'},
+
+
+{day:'Friday',time:'09:00-10:00',subject:'Elective-I: Digital Literacy & Applications',room:'SB'},
+
+{day:'Friday',time:'10:30-11:30',subject:'OOPS Lab (SE1/SE2)',room:'NG • A1-11'},
+
+{day:'Friday',time:'11:30-12:30',subject:'DSA Lab (SE1/SE2)',room:'SN • A1-10'},
+
+{day:'Friday',time:'13:15-14:15',subject:'OOPS with C++',room:'CP'},
+
+{day:'Friday',time:'14:15-15:15',subject:'Elective-I: Digital Literacy & Applications',room:'SB'},
+
+
+{day:'Saturday',time:'09:00-10:00',subject:'Digital Marketing',room:'SN'},
+
+{day:'Saturday',time:'10:30-11:30',subject:'OOPS with C++',room:'CP'},
+
+{day:'Saturday',time:'11:30-12:30',subject:'AI-Stat',room:'RK'},
+
+{day:'Saturday',time:'13:15-15:15',subject:'Liberal',room:'—'}
+
+];
+
+let data =
+JSON.parse(localStorage.getItem('smartTimetableV2') || 'null')
+|| defaultData;
+
+const days = [
+'Monday',
+'Tuesday',
+'Wednesday',
+'Thursday',
+'Friday',
+'Saturday'
+];
+
+const times = [
+'09:00-10:00',
+'10:30-11:30',
+'11:30-12:30',
+'13:15-14:15',
+'14:15-15:15'
+];
+
+
+function render(view='home'){
+
+document.querySelectorAll('nav button')
+.forEach(b =>
+b.classList.toggle(
+'active',
+b.dataset.view === view
+));
+
+const main = document.getElementById('main');
+
+if(view === 'home')
+main.innerHTML = home();
+
+if(view === 'timetable')
+main.innerHTML = tablePage();
+
+if(view === 'study')
+main.innerHTML = studyPage();
+
+if(view === 'exam')
+main.innerHTML = examPage();
+
+if(view === 'seo')
+main.innerHTML = seoPage();
+
+if(view === 'about')
+main.innerHTML = about();
+
+}
+
+
+function home(){
+
+return `
+
+<section class="hero">
+
+<div>
+
+<p><b>SY B.TECH AI & DS • DIV E</b></p>
+
+<h1>
+Plan college.
+<span style="color:var(--primary)">
+Revise smarter.
+</span>
+</h1>
+
+<p>
+Your timetable is based on the Class Time Table effective
+05-08-2026. It includes college periods, recesses,
+weekly revision and exam preparation.
+</p>
+
+<button class="btn primary"
+onclick="render('timetable')">
+Open College Timetable
+</button>
+
+</div>
+
+
+<div class="hero-card">
+
+<h2>Weekly Snapshot</h2>
+
+<div class="stats">
+
+<div class="stat">
+<b>6</b>
+<small>College days</small>
+</div>
+
+<div class="stat">
+<b>8</b>
+<small>Core subjects</small>
+</div>
+
+<div class="stat">
+<b>2</b>
+<small>Daily study blocks</small>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section class="feature-grid">
+
+<div class="feature">
+<h3>📅 College Timetable</h3>
+<p>
+Monday to Saturday schedule from 9:00 AM to 3:15 PM,
+including recesses.
+</p>
+</div>
+
+<div class="feature">
+<h3>🔁 Revision Rotation</h3>
+<p>
+Revise difficult subjects regularly and rotate all
+major subjects through the week.
+</p>
+</div>
+
+<div class="feature">
+<h3>📝 Exam Preparation</h3>
+<p>
+Use weekly tests, active recall, previous questions
+and final revision blocks.
+</p>
+</div>
+
+</section>
+
+`;
+}
+
+
+function tablePage(){
+
+return `
+
+<section class="panel">
+
+<h1>College Timetable</h1>
+
+<p style="color:var(--muted)">
+Department: AI & DS • Class: SY B.Tech [A3-05]
+• Div E • Semester I • Academic Year 2026-27
+• Effective 05-08-2026
+</p>
+
+<div class="controls">
+
+<button class="btn primary"
+onclick="window.print()">
+Print Timetable
+</button>
+
+</div>
+
+</section>
+
+
+<section class="panel">
+
+<div class="table-wrap">
+
+<table class="timetable">
+
+<thead>
+
+<tr>
+
+<th>Time</th>
+
+${days.map(d => `<th>${d}</th>`).join('')}
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+${times.map(t => `
+
+<tr>
+
+<td class="time">${t}</td>
+
+${days.map(d => {
+
+const x =
+data.find(a =>
+a.day === d &&
+a.time === t
+);
+
+return `
+
+<td class="slot">
+
+${x ?
+
+`<div class="class-card">
+
+<strong>${esc(x.subject)}</strong>
+
+<small>${esc(x.room)}</small>
+
+</div>`
+
+:
+
+'<span style="color:var(--muted)">—</span>'
+
+}
+
+</td>`;
+
+}).join('')}
+
+</tr>
+
+`).join('')}
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<p style="color:var(--muted)">
+
+<b>Breaks:</b>
+10:00–10:30 short recess •
+12:30–1:15 long recess.
+
+Lab entries marked SE1/SE2 are shown together because
+the supplied timetable contains both batches.
+
+</p>
+
+</section>
+
+
+<section class="panel">
+
+<h2>Course Abbreviations</h2>
+
+<div class="feature-grid">
+
+<div class="feature">
+<h3>OOPS</h3>
+<p>Object Oriented Programming with C++</p>
+</div>
+
+<div class="feature">
+<h3>DSA</h3>
+<p>Data Structure and Algorithms</p>
+</div>
+
+<div class="feature">
+<h3>DM</h3>
+<p>Digital Marketing and Social Media</p>
+</div>
+
+<div class="feature">
+<h3>CG</h3>
+<p>Computer Graphics</p>
+</div>
+
+<div class="feature">
+<h3>PBL</h3>
+<p>Project Based Learning</p>
+</div>
+
+<div class="feature">
+<h3>Advanced Python</h3>
+<p>Advanced Python</p>
+</div>
+
+<div class="feature">
+<h3>AI-Stat</h3>
+<p>Statistics for AI</p>
+</div>
+
+<div class="feature">
+<h3>Elective-I DLA</h3>
+<p>Digital Literacy and Applications</p>
+</div>
+
+</div>
+
+</section>
+
+`;
+}
+
+
+function studyPage(){
+
+return `
+
+<section class="panel">
+
+<h1>Weekly Revision Plan</h1>
+
+<p style="color:var(--muted)">
+Use the evening after college for focused revision.
+Keep the plan flexible when assignments or labs
+take longer.
+</p>
+
+
+<div class="feature-grid">
+
+<div class="feature">
+<h3>Monday</h3>
+<p>
+<b>5:00–6:15 PM:</b> DSA concepts + problems<br>
+<b>8:00–8:45 PM:</b> AI-Stat revision
+</p>
+</div>
+
+
+<div class="feature">
+<h3>Tuesday</h3>
+<p>
+<b>5:00–6:15 PM:</b> OOPS with C++ coding<br>
+<b>8:00–8:45 PM:</b> Advanced Python
+</p>
+</div>
+
+
+<div class="feature">
+<h3>Wednesday</h3>
+<p>
+<b>5:00–6:15 PM:</b> DSA Lab + OOPS Lab<br>
+<b>8:00–8:45 PM:</b> Digital Marketing
+</p>
+</div>
+
+
+<div class="feature">
+<h3>Thursday</h3>
+<p>
+<b>5:00–6:15 PM:</b> Computer Graphics + DSA<br>
+<b>8:00–8:45 PM:</b> AI-Stat formulas
+</p>
+</div>
+
+
+<div class="feature">
+<h3>Friday</h3>
+<p>
+<b>5:00–6:15 PM:</b> OOPS + Python practice<br>
+<b>8:00–8:45 PM:</b> Elective-I
+</p>
+</div>
+
+
+<div class="feature">
+<h3>Saturday</h3>
+<p>
+<b>5:00–6:15 PM:</b> Backlog / assignments<br>
+<b>8:00–8:45 PM:</b> Weak topics
+</p>
+</div>
+
+</div>
+
+</section>
+
+
+<section class="panel">
+
+<h2>Sunday Weekly Review</h2>
+
+<p>
+Use one study block for a short test covering DSA,
+OOPS, AI-Stat and Advanced Python. Review mistakes,
+complete pending assignments and prepare next week's
+targets.
+</p>
+
+</section>
+
+`;
+}
+
+
+function examPage(){
+
+return `
+
+<section class="panel">
+
+<h1>Exam Preparation Plan</h1>
+
+<p style="color:var(--muted)">
+The supplied college timetable does not contain
+examination dates, so this page gives a preparation
+system rather than an invented exam countdown.
+</p>
+
+
+<div class="feature-grid">
+
+<div class="feature">
+<h3>4+ Weeks Before</h3>
+<p>
+Finish first-pass notes. Identify weak chapters.
+Practice basic questions.
+</p>
+</div>
+
+
+<div class="feature">
+<h3>3 Weeks Before</h3>
+<p>
+Start chapter-wise problem solving and give extra
+practice to DSA, OOPS, Python and AI-Stat.
+</p>
+</div>
+
+
+<div class="feature">
+<h3>2 Weeks Before</h3>
+<p>
+Use active recall, timed questions and previous/sample
+papers.
+</p>
+</div>
+
+
+<div class="feature">
+<h3>1 Week Before</h3>
+<p>
+Revise formulas, definitions, programs, diagrams and
+important questions.
+</p>
+</div>
+
+
+<div class="feature">
+<h3>Day Before</h3>
+<p>
+Do light revision and organize required materials.
+</p>
+</div>
+
+
+<div class="feature">
+<h3>Exam Morning</h3>
+<p>
+Review formulas, key concepts and common mistakes.
+</p>
+</div>
+
+</div>
+
+</section>
+
+
+<section class="panel">
+
+<h2>Priority Rotation</h2>
+
+<p>
+<b>High practice:</b>
+DSA, OOPS with C++, Advanced Python.
+</p>
+
+<p>
+<b>Concept + formula revision:</b>
+AI-Stat, Computer Graphics.
+</p>
+
+<p>
+<b>Reading + writing practice:</b>
+Digital Marketing and Social Media, Elective-I.
+</p>
+
+<p>
+<b>Project-based:</b>
+PBL — keep a weekly project progress block.
+</p>
+
+</section>
+
+`;
+}
+
+
+function seoPage(){
+
+return `
+
+<section class="panel">
+
+<h1>SEO Assignment – Smart Timetable Blog</h1>
+
+<p style="color:var(--muted)">
+This section is structured according to Assignment-2
+for Digital Marketing and Social Media (ADMC301).
+It covers Q1, Q2, Q3 and Q4.
+</p>
+
+</section>
+
+
+<section class="panel">
+
+<h2>
+Q1. Keyword Research and Content Optimization
+</h2>
+
+<h3>Blog Topic</h3>
+
+<p>
+<b>
+Smart Timetable: How Students Can Manage College,
+Revision and Exams
+</b>
+</p>
+
+
+<h3>Sample SEO Title</h3>
+
+<p>
+<b>
+Smart Timetable for Students |
+College, Revision & Exam Planner
+</b>
+</p>
+
+
+<h3>Sample Meta Description</h3>
+
+<p>
+Plan your college timetable, revision sessions and
+exam preparation with a simple Smart Timetable
+designed for students.
+</p>
+
+
+<h3>Target Keyword Ideas</h3>
+
+<div class="feature-grid">
+
+<div class="feature">
+<h3>Primary</h3>
+<p>student timetable</p>
+</div>
+
+<div class="feature">
+<h3>Secondary</h3>
+<p>
+college timetable, study timetable
+</p>
+</div>
+
+<div class="feature">
+<h3>Long-tail</h3>
+<p>
+college timetable and revision planner for students
+</p>
+</div>
+
+</div>
+
+
+<p style="color:var(--muted)">
+
+<b>Evidence required:</b>
+Add your Ubersuggest or Google Keyword Planner
+screenshot showing actual keyword data.
+
+</p>
+
+</section>
+
+
+<section class="panel">
+
+<h2>Sample Blog Content</h2>
+
+<h3>
+Smart Timetable: A Simple Way to Manage College
+and Revision
+</h3>
+
+<p>
+A college timetable becomes more useful when it is
+connected with revision and exam preparation.
+Students can use a weekly schedule to see classes,
+practical sessions, project work, revision blocks
+and weekly review periods in one place.
+</p>
+
+<p>
+The Smart Timetable website combines the college
+schedule with a revision rotation. Difficult
+subjects can receive regular problem-solving time,
+while theory subjects can be revised through active
+recall and short weekly tests.
+</p>
+
+</section>
+
+
+<section class="panel">
+
+<h2>Q2. SEO Report on Blog</h2>
+
+<table class="timetable">
+
+<thead>
+
+<tr>
+<th>SEO Element</th>
+<th>Current Implementation</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>Page Title</td>
+<td>
+Smart Timetable | Student Class Schedule Planner
+</td>
+</tr>
+
+<tr>
+<td>Meta Description</td>
+<td>
+Student timetable, study sessions, breaks and weekly
+schedules
+</td>
+</tr>
+
+<tr>
+<td>Meta Keywords</td>
+<td>
+student timetable, college timetable, class schedule,
+study timetable, weekly timetable
+</td>
+</tr>
+
+<tr>
+<td>Headings</td>
+<td>
+Home, College Timetable, Revision Plan,
+Exam Plan, SEO Assignment
+</td>
+</tr>
+
+<tr>
+<td>Mobile Friendly</td>
+<td>Responsive layout included</td>
+</tr>
+
+<tr>
+<td>Search Console</td>
+<td>
+To be checked after the public Vercel URL is indexed
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+
+<p style="color:var(--muted)">
+
+<b>Important:</b>
+Add the actual Google Search Console or Ubersuggest
+performance screenshot after the website becomes
+public. Do not use invented clicks, impressions,
+CTR or position values.
+
+</p>
+
+</section>
+
+
+<section class="panel">
+
+<h2>Q3. Procedural Steps of SEO Conduction</h2>
+
+<ol>
+
+<li>Create and publish the Smart Timetable website.</li>
+
+<li>
+Connect the public website to Google Search Console.
+</li>
+
+<li>
+Verify website ownership.
+</li>
+
+<li>
+Submit the website URL for indexing.
+</li>
+
+<li>
+Use Ubersuggest or Google Keyword Planner for
+keyword research.
+</li>
+
+<li>
+Select relevant primary, secondary and long-tail
+keywords.
+</li>
+
+<li>
+Optimize the page title, meta description,
+headings and content.
+</li>
+
+<li>
+Check mobile responsiveness and page usability.
+</li>
+
+<li>
+Inspect the URL in Google Search Console.
+</li>
+
+<li>
+Record clicks, impressions, CTR and average position
+when data becomes available.
+</li>
+
+<li>
+Take screenshots of the important steps and place
+them in the assignment report.
+</li>
+
+</ol>
+
+
+<p style="color:var(--muted)">
+
+<b>Images:</b>
+Insert your own screenshots of Ubersuggest/
+Keyword Planner, Search Console verification,
+URL inspection/indexing and the public website.
+
+</p>
+
+</section>
+
+
+<section class="panel">
+
+<h2>Q4. Keyword Report</h2>
+
+<table class="timetable">
+
+<thead>
+
+<tr>
+
+<th>Keyword</th>
+<th>Type</th>
+<th>Use in Content</th>
+<th>Tool Evidence</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>student timetable</td>
+<td>Primary</td>
+<td>Title, heading, body</td>
+<td>Insert Ubersuggest/Keyword Planner result</td>
+
+</tr>
+
+<tr>
+
+<td>college timetable</td>
+<td>Secondary</td>
+<td>Heading and body</td>
+<td>Insert tool result</td>
+
+</tr>
+
+<tr>
+
+<td>study timetable</td>
+<td>Secondary</td>
+<td>Revision section</td>
+<td>Insert tool result</td>
+
+</tr>
+
+<tr>
+
+<td>weekly timetable</td>
+<td>Secondary</td>
+<td>Timetable section</td>
+<td>Insert tool result</td>
+
+</tr>
+
+<tr>
+
+<td>
+college timetable and revision planner for students
+</td>
+
+<td>Long-tail</td>
+
+<td>Blog content</td>
+
+<td>Insert tool result</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+
+<p style="color:var(--muted)">
+
+Replace the "Insert tool result" notes with the
+actual values/screenshots from the keyword tool.
+
+</p>
+
+</section>
+
+`;
+}
+
+
+function about(){
+
+return `
+
+<section class="panel">
+
+<h1>About Smart Timetable</h1>
+
+<p>
+Smart Timetable is a student-focused timetable
+planner designed to make weekly academic scheduling
+simple and organized.
+</p>
+
+
+<div class="feature-grid">
+
+<div class="feature">
+
+<h3>For Students</h3>
+
+<p>
+Designed around classes, study periods, projects
+and academic activities.
+</p>
+
+</div>
+
+
+<div class="feature">
+
+<h3>Responsive</h3>
+
+<p>
+The layout adapts to desktop, tablet and mobile
+screens.
+</p>
+
+</div>
+
+
+<div class="feature">
+
+<h3>SEO Ready</h3>
+
+<p>
+The website includes an SEO-friendly title,
+meta description, headings and relevant timetable
+keywords.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+`;
+}
+
+
+function esc(s){
+
+return s.replace(
+/[&<>'"]/g,
+c => ({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+"'":'&#39;',
+'"':'&quot;'
+}[c])
+);
+
+}
+
+
+document
+.querySelectorAll('nav button')
+.forEach(
+b =>
+b.addEventListener(
+'click',
+() => render(b.dataset.view)
+)
+);
+
+render();
+
+</script>
+
+</body>
+</html>
